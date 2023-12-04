@@ -22,7 +22,7 @@ object ScalaBatchLayer {
     try {
       // Read data from CSV file
       val playerData = spark.sql("SELECT * FROM playerdatahive")
-      //val inputPlayerData = Read from Kafka topic
+      val inputPlayerData = spark.sql("SELECT * FROM newplayerdata")
 
       // Feature selection
       val selectedFeatures = Array(
@@ -59,7 +59,6 @@ object ScalaBatchLayer {
 
       // Make predictions on the test set
       val predictions = model.transform(testData)
-      // val inputPredictions = model.transform(inputPlayerData)
 
       // Evaluate the model
       val evaluator = new RegressionEvaluator()
@@ -73,6 +72,16 @@ object ScalaBatchLayer {
       // Save the model
       model.write.overwrite().save("hdfs:///setu-project/")
 
+      // predictions for input data
+      val inputPredictions = model.transform(inputPlayerData)
+      val inputPredictionsSubset = inputPredictions.select("short_name", "fifa_version", "prediction")
+      val predictionsFinal = inputPredictionsSubset.withColumnRenamed("prediction", "value_eur")
+      val inputPlayerDataProcessed = inputPlayerData
+        .join(predictionsFinal, Seq("short_name", "fifa_version"), "left_outer")
+
+      // Put inputPredictions to "value_eur" column of inputPlayerData and then combine the datasets
+      val combinedData = playerData.union(inputPlayerDataProcessed)
+
       // Creating views and saving to Hbase via Hive
       spark.sql("insert overwrite table playerdataprocessed " +
         "select concat(short_name, fifa_version)," +
@@ -80,6 +89,12 @@ object ScalaBatchLayer {
         "  player_positions, nationality_name, age, club_name," +
         "  preferred_foot, overall, pace, shooting, passing, dribbling, defending, physic," +
         "  value_eur from playerdatahive;")
+
+      combinedData.createOrReplaceTempView("combined_data_final")
+
+      // Overwrite the playerdatahive table with the data from combinedData
+      spark.sql("INSERT OVERWRITE TABLE playerdatahive SELECT * FROM combined_data_final")
+      spark.sql("TRUNCATE TABLE newplayerdata")
 
 
     } catch {
