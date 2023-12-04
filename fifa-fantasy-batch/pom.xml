@@ -7,7 +7,6 @@
 	<packaging>pom</packaging>
 	<name>fifa-fantasy-batch</name>
 	<modules>
-		<module>StreamingLayer</module>
 		<module>SpeedLayer</module>
 	</modules>
 	<build>

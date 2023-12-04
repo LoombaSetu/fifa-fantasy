@@ -70,16 +70,16 @@ object FifaSpeedLayer {
         val put = new Put(Bytes.toBytes(uniqueIdentifier))
 
         // Add player attributes to the Put object
-        put.addColumn(Bytes.toBytes("attributes"), Bytes.toBytes("overall"), Bytes.toBytes(player.overall))
-        put.addColumn(Bytes.toBytes("attributes"), Bytes.toBytes("pace"), Bytes.toBytes(player.pace))
-        put.addColumn(Bytes.toBytes("attributes"), Bytes.toBytes("shooting"), Bytes.toBytes(player.shooting))
-        put.addColumn(Bytes.toBytes("attributes"), Bytes.toBytes("passing"), Bytes.toBytes(player.passing))
-        put.addColumn(Bytes.toBytes("attributes"), Bytes.toBytes("dribbling"), Bytes.toBytes(player.dribbling))
-        put.addColumn(Bytes.toBytes("attributes"), Bytes.toBytes("defending"), Bytes.toBytes(player.defending))
-        put.addColumn(Bytes.toBytes("attributes"), Bytes.toBytes("physic"), Bytes.toBytes(player.physic))
-        put.addColumn(Bytes.toBytes("attributes"), Bytes.toBytes("nationality_name"), Bytes.toBytes(player.nationality_name))
-        put.addColumn(Bytes.toBytes("attributes"), Bytes.toBytes("preferred_foot"), Bytes.toBytes(player.preferred_foot))
-        put.addColumn(Bytes.toBytes("attributes"), Bytes.toBytes("val_eur"), Bytes.toBytes(player.val_eur))
+        put.addColumn(Bytes.toBytes("player"), Bytes.toBytes("overall"), Bytes.toBytes(player.overall.toLong))
+        put.addColumn(Bytes.toBytes("player"), Bytes.toBytes("pace"), Bytes.toBytes(player.pace.toLong))
+        put.addColumn(Bytes.toBytes("player"), Bytes.toBytes("shooting"), Bytes.toBytes(player.shooting.toLong))
+        put.addColumn(Bytes.toBytes("player"), Bytes.toBytes("passing"), Bytes.toBytes(player.passing.toLong))
+        put.addColumn(Bytes.toBytes("player"), Bytes.toBytes("dribbling"), Bytes.toBytes(player.dribbling.toLong))
+        put.addColumn(Bytes.toBytes("player"), Bytes.toBytes("defending"), Bytes.toBytes(player.defending.toLong))
+        put.addColumn(Bytes.toBytes("player"), Bytes.toBytes("physic"), Bytes.toBytes(player.physic.toLong))
+        put.addColumn(Bytes.toBytes("player"), Bytes.toBytes("nationality_name"), Bytes.toBytes(player.nationality_name.toLong))
+        put.addColumn(Bytes.toBytes("player"), Bytes.toBytes("preferred_foot"), Bytes.toBytes(player.preferred_foot.toLong))
+        put.addColumn(Bytes.toBytes("player"), Bytes.toBytes("val_eur"), Bytes.toBytes(player.val_eur.toLong))
 
         // Perform the HBase insertion
         table.put(put)
