@@ -8,6 +8,7 @@
 	<name>fifa-fantasy-batch</name>
 	<modules>
 		<module>StreamingLayer</module>
+		<module>SpeedLayer</module>
 	</modules>
 	<build>
     <sourceDirectory>src/main/scala</sourceDirectory>
